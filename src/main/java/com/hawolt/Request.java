@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
+import java.util.function.Supplier;
 
 /**
  * Created by: Niklas
@@ -21,11 +22,17 @@ public class Request {
     }
 
     public Request(String endpoint, Proxy proxy) throws IOException {
-        this(endpoint, proxy, "GET", false);
+        this(endpoint, proxy, Method.GET, false);
     }
 
-    public Request(String endpoint, String method, boolean output) throws IOException {
+    public Request(String endpoint, Method method, boolean output) throws IOException {
         this(endpoint, null, method, output);
+    }
+
+    public Request(String endpoint, Proxy proxy, Method method, boolean output) throws IOException {
+        connection = BasicHttp.open(endpoint, proxy);
+        connection.setRequestMethod(method.name());
+        connection.setDoOutput(output);
     }
 
     public Request(String endpoint, Proxy proxy, String method, boolean output) throws IOException {
